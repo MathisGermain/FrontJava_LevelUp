@@ -1,27 +1,42 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/exerciceList.css}"/>
-</head>
-<body>
-    <label>Liste des Exercices : </label>
-    <tr th:each="exercice: ${exercices}">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/exerciceList.css}"/>
+    </head>
 
-            <div>
-                <!--<input type="hidden" th:field="*{exercice.id}">
-                th:field="*{exercice.title}"
-                th:field="*{exercice.statement}"
-                -->
-                <td th:text="${exercice.title}" />
-                <td th:text="${exercice.statement}"/>
+    <body>
+        <h2>Liste des Exercices</h2>
 
-                <form action="getExercice" th:object="${exerciceForm}" method="POST">
-                    <input type="hidden" th:field="*{exerciceId}" th:value="${exercice.id}">
-                    <button type="submit" th:href="a">Go</button>
-                    </form>
-                </div>
-        </tr>
+        <div class="table-wrapper">
+            <table class="fl-table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Statement</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="exercice: ${exercices}">
+                        <!--<input type="hidden" th:field="*{exercice.id}">
+                        th:field="*{exercice.title}"
+                        th:field="*{exercice.statement}"
+                        -->
+                        <td th:text="${exercice.id}" />
+                        <td th:text="${exercice.title}" />
+                        <td th:text="${exercice.statement}"/>
+                        <td>
+                            <form action="getExercice" th:object="${exerciceForm}" method="POST">
+                                <input type="hidden" th:field="*{exerciceId}" th:value="${exercice.id}">
+                                <button type="submit" class="blue_button">Voir</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </body>
-    </html>
+</html>
