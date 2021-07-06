@@ -8,13 +8,13 @@
 
 <form th:action="@{/exercice}" th:object="${exerciceForm}" method="POST">
 
-    <input type="hidden" th:field="${exercice.id}">
+    <input type="hidden" th:field="${exerciceForm.exerciceId}">
 
-    <label th:text="${exercice.title}"></label>
+    <label th:text="${exerciceForm.title}"></label>
 
     <Label >Ennoncé : </Label>
 
-    <p th:text="${exercice.statement}"></p>
+    <p th:text="${exerciceForm.statement}"></p>
 
     <label>Code : </label>
 

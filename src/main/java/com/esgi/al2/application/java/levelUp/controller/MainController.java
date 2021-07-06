@@ -90,10 +90,15 @@ public class MainController {
         ex.setStatement("Lorem ipsum");
 
         exercices.add(ex);
+        exercices.add(ex);
+        exercices.add(ex);
+
+        ExerciceForm exerciceForm = new ExerciceForm();
 
 
         //appel api pour récupérer la liste d'exercice non résolu
         model.addAttribute("exercices", exercices);
+        model.addAttribute("exerciceForm",exerciceForm);
 
         return "exerciceList";
     }
@@ -122,19 +127,16 @@ public class MainController {
 
     @RequestMapping(value = { "/getExercice" }, method = RequestMethod.POST)
     public String showExercicePage(Model model, //
-                            @ModelAttribute("elementList") ElementList elementList){
+                            @ModelAttribute("exerciceForm") ExerciceForm exerciceForm){
 
 
+        System.out.println("Id Exercice : " + exerciceForm.getExerciceId());
 
 
-        ExerciceForm exerciceForm = new ExerciceForm();
-        exerciceForm.setExerciceId(elementList.getId());
-        exerciceForm.setStatement(elementList.getStatement());
-        exerciceForm.setTitle(elementList.getTitle());
         model.addAttribute("exerciceForm", exerciceForm);
 
 
-        return "exercice";
+        return "redirect:/exercice";
     }
 
     @RequestMapping(value = { "/exercice" }, method = RequestMethod.POST)
