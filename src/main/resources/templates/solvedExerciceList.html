@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<label>Exercice List : </label>
+
+<tr th:each="solvedExercice: ${solvedExercices}">
+        <td th:text="${solvedExercice.id}" />
+        <td th:text="${solvedExercice.title}" />
+        <td th:text="${solvedExercice.statement}" />
+        <div class="icon icon--right">
+            <svg>
+                <use xlink:href="#arrow-right"></use>
+            </svg>
+        </div>
+</tr>
+
+</body>
+</html>
