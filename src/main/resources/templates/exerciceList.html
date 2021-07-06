@@ -8,16 +8,20 @@
 <body>
     <label>Liste des Exercices : </label>
     <tr th:each="exercice: ${exercices}">
-        <!--<form action="getExercice" th:object="${elementList}" method="POST">-->
+
             <div>
-                <input type="hidden" th:field="*{exercice.id}">
-                <td th:text="${exercice.title}" th:field="*{exercice.title}"/>
-                <td th:text="${exercice.statement}" th:field="*{exercice.statement}"/>
-                <div id="testbutton">
-                   <!-- <button type="submit"></button> -->
+                <!--<input type="hidden" th:field="*{exercice.id}">
+                th:field="*{exercice.title}"
+                th:field="*{exercice.statement}"
+                -->
+                <td th:text="${exercice.title}" />
+                <td th:text="${exercice.statement}"/>
+
+                <form action="getExercice" th:object="${exerciceForm}" method="POST">
+                    <input type="hidden" th:field="*{exerciceId}" th:value="${exercice.id}">
+                    <button type="submit" th:href="a">Go</button>
+                    </form>
                 </div>
-            </div>
-        <!--</form>-->
-    </tr>
-</body>
-</html>
+        </tr>
+    </body>
+    </html>
