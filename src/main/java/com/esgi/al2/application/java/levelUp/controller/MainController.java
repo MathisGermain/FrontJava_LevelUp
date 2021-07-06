@@ -109,6 +109,9 @@ public class MainController {
         ex.setStatement("Lorem ipsum");
 
         exercices.add(ex);
+        exercices.add(ex);
+        exercices.add(ex);
+        exercices.add(ex);
         //appel api pour récupérer la liste d'exercice résolu
 
 

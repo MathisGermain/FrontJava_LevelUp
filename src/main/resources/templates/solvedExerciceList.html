@@ -1,23 +1,33 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/exerciceList.css}"/>
+    </head>
 
-<label>Exercice List : </label>
+    <body>
+        <h2>Solved exercices list</h2>
 
-<tr th:each="solvedExercice: ${solvedExercices}">
-        <td th:text="${solvedExercice.id}" />
-        <td th:text="${solvedExercice.title}" />
-        <td th:text="${solvedExercice.statement}" />
-        <div class="icon icon--right">
-            <svg>
-                <use xlink:href="#arrow-right"></use>
-            </svg>
+        <div class="table-wrapper">
+            <table class="fl-table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Statement</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="solvedExercice: ${solvedExercices}">
+                        <td th:text="${solvedExercice.id}" />
+                        <td th:text="${solvedExercice.title}" />
+                        <td th:text="${solvedExercice.statement}" />
+                        <td><button class="blue_button" th:href="">Voir</button></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-</tr>
-
-</body>
+    </body>
 </html>
