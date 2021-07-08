@@ -1,36 +1,12 @@
-@import "bourbon";
-
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,700);
 @import url(https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css);
 @import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css);
 
-$shadow-color: #23203b;
-$input-color: lighten(#AB9E95, 10%);
-$input-border-color: #5E5165;
-$button-background-color: #27AE60;
-
-* {
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  background: url(https://dl.dropboxusercontent.com/u/159328383/background.jpg) no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
-
-body {
-  background: transparent;
-}
-
-body, input, button {
+input, button {
   font-family: 'Source Sans Pro', sans-serif;
 }
 
-@mixin normalize-input {
+normalize-input {
   display: block;
   width: auto;
   height: auto;
@@ -46,75 +22,53 @@ body, input, button {
   width: 400px;
   min-height: 400px;
   margin: 2% auto 0 auto;
+}
 
-  .heading {
-    text-align: center;
-    margin-top: 1%;
+.heading {
+  text-align: center;
+  margin-top: 1%;
+}
 
-    h2 {
-      font-size: 3em;
-      font-weight: 300;
-      color: rgba(255, 255, 255, 0.7);
-      display: inline-block;
-      padding-bottom: 5px;
-      text-shadow: 1px 1px 3px $shadow-color;
-    }
-  }
+.input-group {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-  form {
-    .input-group {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+span {
+  background: transparent;
+  min-width: 53px;
+  border: none;
+}
 
-      &:last-of-type {
-        border-top: none;
-      }
+i {
+  font-size: 1.5em;
+}
 
-      span {
-        background: transparent;
-        min-width: 53px;
-        border: none;
+input.form-control {
+@include normalize-input;
+  padding: 10px;
+  font-size: 1.6em;
+  width: 100%;
+  background: transparent;
+  height: 50px !important;
+}
 
-        i {
-          font-size: 1.5em;
-          color: rgba(255, 255, 255, 0.2);
-        }
-      }
-    }
-
-    input.form-control {
-      @include normalize-input;
-
-      padding: 10px;
-      font-size: 1.6em;
-      width: 100%;
-      background: transparent;
-      color: $input-color;
-
-      &:focus {
-        border: none;
-      }
-    }
-
-    button {
-      margin-top: 20px;
-      background: $button-background-color;
-      border: none;
-      font-size: 1.6em;
-      font-weight: 300;
-      padding: 5px 0;
-      width: 100%;
-      border-radius: 3px;
-      color: lighten($button-background-color, 40%);
-      border-bottom: 4px solid darken($button-background-color, 10%);
-
-      &:hover {
-        background: tint($button-background-color, 4%);
-        -webkit-animation: hop 1s;
-        animation: hop 1s;
-      }
-    }
-  }
+.login-button {
+  width: 150px;
+  margin-top: 20px;
+  border: none;
+  font-size: 1.6em;
+  font-weight: 300;
+  padding: 5px 0;
+  border-radius: 3px;
+  position: relative;
+  height: 40px;
+  border: 0;
+  text-decoration: none;
+  text-transform: uppercase;
+  text-align: center;
+  background-color: rgba( 71, 147, 227, 1);
+  color: white;
 }
 
 .float {
@@ -176,15 +130,14 @@ body, input, button {
 /* Extra Small Devices, Phones */
 @media only screen and (max-width : 480px) {
   .login {
-
-    h2 {
-      margin-top: 0;
-    }
-
     margin-top: 0;
     width: 400px;
     font-size: 1em;
     min-height: 0;
+  }
+
+  h2 {
+    margin-top: 0;
   }
 }
 

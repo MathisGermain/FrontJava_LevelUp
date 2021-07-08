@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}"/>
 </head>
 <body>
@@ -25,7 +26,7 @@
                     <div th:if="${errorLoginEmpty}" th:utext="${errorLoginEmpty}"
                          style="color:red;font-style:italic;">
                     </div>
-                    <button type="submit" class="float">Login</button>
+                    <button type="submit" class="float login-button">Login</button>
                 </form>
             </div>
         </div>

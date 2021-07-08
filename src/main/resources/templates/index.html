@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}"/>
-</head>
-<body>
-
-<form th:action="@{/exerciceList}" method="GET">
-    <button type="submit">Résoudre un Exercice</button>
-</form>
-<form th:action="@{/solvedExerciceList}" method="GET">
-    <button type="submit">Noter un Exercice</button>
-</form>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}"/>
+    </head>
+    <body>
+        <div class="button-group">
+            <form th:action="@{/exerciceList}" method="GET">
+                <button type="submit">Résoudre un Exercice</button>
+            </form>
+            <form th:action="@{/solvedExerciceList}" method="GET">
+                <button type="submit">Noter un Exercice</button>
+            </form>
+        </div>
+    </body>
 </html>
