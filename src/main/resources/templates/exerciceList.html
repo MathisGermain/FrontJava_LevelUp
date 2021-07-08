@@ -30,10 +30,13 @@
                         <td th:text="${exercice.title}" />
                         <td th:text="${exercice.statement}"/>
                         <td>
-                            <form action="getExercice" th:object="${exerciceForm}" method="POST">
+                            <!--<form th:action="@{/exercice}"  th:object="${exerciceForm}" method="GET">
                                 <input type="hidden" th:field="*{exerciceId}" th:value="${exercice.id}">
                                 <button type="submit" class="blue_button">Voir</button>
                             </form>
+                            -->
+                           <a th:href="@{'/exercice?id=' + ${exercice.id}}">Voir</a>
+
                         </td>
                     </tr>
                 </tbody>

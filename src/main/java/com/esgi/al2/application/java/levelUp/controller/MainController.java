@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,18 +126,21 @@ public class MainController {
         return "solvedExerciceList";
     }
 
-    @RequestMapping(value = { "/getExercice" }, method = RequestMethod.POST)
-    public String showExercicePage(Model model, //
-                            @ModelAttribute("exerciceForm") ExerciceForm exerciceForm){
+    @RequestMapping(value = { "/exercice" }, params = { "id" } , method = RequestMethod.GET)
+    public String showExercicePage(Model model, @RequestParam("id") Integer id){
 
+        //Appel API pour chercher les informations correspondant a l'id de l'exercice.
 
-        System.out.println("Id Exercice : " + exerciceForm.getExerciceId());
+        ExerciceForm exerciceForm = new ExerciceForm();
+        exerciceForm.setExerciceId(id);
+        exerciceForm.setTitle("titre de l'exo");
+        exerciceForm.setStatement("Ceci est l'ennonce de l'exercice ... Lorem Ipsum");
 
-
+        System.out.println("Id Exercice : " + id);
         model.addAttribute("exerciceForm", exerciceForm);
 
 
-        return "redirect:/exercice";
+        return "exercice";
     }
 
     @RequestMapping(value = { "/exercice" }, method = RequestMethod.POST)

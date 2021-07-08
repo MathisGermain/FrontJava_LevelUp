@@ -7,7 +7,7 @@
     </head>
     <body>
         <form th:action="@{/exercice}" th:object="${exerciceForm}" method="POST">
-            <input type="hidden" th:field="${exerciceForm.exerciceId}">
+            <input type="hidden" th:field="*{exerciceId}">
             <label th:text="${exerciceForm.title}"></label>
 
             <Label >Ennoncé : </Label>
