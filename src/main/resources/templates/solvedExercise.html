@@ -1,31 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<div>
-<Label>Ennoncé : </Label>
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
+    </head>
+    <body>
+        <div>
+            <Label>Ennoncé : </Label>
+            <p></p>
 
-<p></p>
+            <label>Code : </label>
+            <p></p>
+        </div>
 
-<label>Code : </label>
-
-<p></p>
-
-</div>
-
-<form th:action="@{/solvedExercice}" th:object="${commentForm}" method="POST">
-
-    <input type="text" placeholder="Title">
-    <textarea cols="300" rows="20">Give your opinion on this code</textarea>
-    <button type="submit" >Login</button>
-
-
-</form>
-
-</form>
-
-</body>
+        <form th:action="@{/solvedExercice}" th:object="${commentForm}" method="POST">
+            <input type="text" placeholder="Title">
+            <textarea cols="300" rows="20">Give your opinion on this code</textarea>
+            <button type="submit" >Login</button>
+        </form>
+    </body>
 </html>
