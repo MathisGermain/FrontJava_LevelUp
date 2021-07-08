@@ -4,6 +4,11 @@
         <meta charset="UTF-8">
         <title>Title</title>
         <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
+
+        <!-- Create a simple CodeMirror instance -->
+        <link rel="stylesheet" th:href="@{/codemirror/lib/codemirror.css}">
+        <script th:src="@{/codemirror/lib/codemirror.js}"></script>
+        <script th:src="@{/codemirror/mode/javascript/javascript.js}"></script>
     </head>
     <body>
         <form th:action="@{/exercice}" th:object="${exerciceForm}" method="POST">
@@ -14,9 +19,19 @@
             <p th:text="${exerciceForm.statement}"></p>
 
             <label>Code : </label>
-            <textarea cols="300" rows="20" th:field="*{code}">Write your code here.</textarea>
+            <textarea id="code-mirror" cols="300" rows="20" th:field="*{code}"></textarea>
 
             <button type="submit" >Login</button>
         </form>
+
+
+        <script>
+            let textArea = document.getElementById('code-mirror')
+
+            CodeMirror.fromTextArea(textArea, {
+                lineNumbers: true,
+                mode: "javascript"
+            });
+        </script>
     </body>
 </html>
