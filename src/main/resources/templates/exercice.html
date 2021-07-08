@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>Title</title>
         <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/exercice.css}"/>
 
         <!-- Create a simple CodeMirror instance -->
         <link rel="stylesheet" th:href="@{/codemirror/lib/codemirror.css}">
@@ -13,15 +14,18 @@
     <body>
         <form th:action="@{/exercice}" th:object="${exerciceForm}" method="POST">
             <input type="hidden" th:field="*{exerciceId}">
-            <label th:text="${exerciceForm.title}"></label>
 
-            <Label >Ennoncé : </Label>
-            <p th:text="${exerciceForm.statement}"></p>
+            <h2 th:text="${exerciceForm.title}"></h2>
 
-            <label>Code : </label>
+            <b>Ennoncé : </b><br>
+            <i th:text="${exerciceForm.statement}"></i><br><br>
+
+            <b>Réponse : </b>
             <textarea id="code-mirror" cols="300" rows="20" th:field="*{code}"></textarea>
 
-            <button type="submit" >Login</button>
+            <div class="button-group">
+                <button type="submit" class="green-button" >Valider</button>
+            </div>
         </form>
 
 
