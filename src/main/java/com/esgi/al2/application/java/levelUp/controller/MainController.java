@@ -4,6 +4,8 @@ import com.esgi.al2.application.java.levelUp.form.ElementList;
 import com.esgi.al2.application.java.levelUp.form.ExerciceForm;
 import com.esgi.al2.application.java.levelUp.form.LoginForm;
 import com.esgi.al2.application.java.levelUp.model.Exercice;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +40,9 @@ public class MainController {
     @Value("${error.empty.code.input}")
     private String errorCodeEmpty;
 
+    @Value("${api.levelUp.url}")
+    private String apiLevelUpUrl;
+
 
 
 
@@ -44,7 +56,7 @@ public class MainController {
     }
 
     @RequestMapping(value = { "/login" }, method = RequestMethod.GET)
-    public String showLoginPage(Model model) {
+    public String showLoginPage(Model model) throws Exception {
 
         LoginForm loginForm = new LoginForm();
         model.addAttribute("loginForm", loginForm);
@@ -54,7 +66,7 @@ public class MainController {
 
     @RequestMapping(value = { "/login" }, method = RequestMethod.POST)
     public String postLogin(Model model, //
-    @ModelAttribute("loginForm") LoginForm loginForm) {
+    @ModelAttribute("loginForm") LoginForm loginForm) throws Exception {
 
         String email = loginForm.getEmail();
         String password = loginForm.getPassword();
@@ -62,6 +74,20 @@ public class MainController {
 
         if (email != null && email.length() > 0 //
                 && password != null && password.length() > 0) {
+
+
+            HttpClient client = getHttpClient();
+            HttpRequest request = getHttpRequest(apiLevelUpUrl + "users/signin");
+
+
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            ObjectMapper mapper = new ObjectMapper();
+
+
+            System.out.println(response.body());
+
 
             // Appel API pour vérifier les informations du User
             if(1==1){
@@ -88,7 +114,7 @@ public class MainController {
         Exercice ex = new Exercice();
         ex.setId(1);
         ex.setTitle("Test");
-        ex.setStatement("Lorem ipsum");
+        ex.setContent("Lorem ipsum");
 
         exercices.add(ex);
         exercices.add(ex);
@@ -112,7 +138,7 @@ public class MainController {
         Exercice ex = new Exercice();
         ex.setId(1);
         ex.setTitle("Test");
-        ex.setStatement("Lorem ipsum");
+        ex.setContent("Lorem ipsum");
 
         exercices.add(ex);
         exercices.add(ex);
@@ -127,16 +153,21 @@ public class MainController {
     }
 
     @RequestMapping(value = { "/exercice" }, params = { "id" } , method = RequestMethod.GET)
-    public String showExercicePage(Model model, @RequestParam("id") Integer id){
+    public String showExercicePage(Model model, @RequestParam("id") Integer id) throws Exception {
+        
+        HttpClient client = getHttpClient();
+        HttpRequest request = getHttpRequest(apiLevelUpUrl + "exercises/1");
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println(response.body());
 
-        //Appel API pour chercher les informations correspondant a l'id de l'exercice.
+        ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        Exercice exercice = mapper.readValue(response.body(), Exercice.class);
 
         ExerciceForm exerciceForm = new ExerciceForm();
         exerciceForm.setExerciceId(id);
-        exerciceForm.setTitle("titre de l'exo");
-        exerciceForm.setStatement("Ceci est l'ennonce de l'exercice ... Lorem Ipsum");
+        exerciceForm.setTitle(exercice.getTitle());
+        exerciceForm.setStatement(exercice.getContent());
 
-        System.out.println("Id Exercice : " + id);
         model.addAttribute("exerciceForm", exerciceForm);
 
 
@@ -163,5 +194,23 @@ public class MainController {
             return "exercice";
         }
     }
+
+    public HttpClient getHttpClient(){
+        HttpClient client = HttpClient.newHttpClient();
+        return client;
+    }
+
+    public HttpRequest getHttpRequest(String uri) throws Exception {
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri))
+                .build();
+
+        return request;
+    }
+
+
+
+
 
 }
