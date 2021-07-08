@@ -4,7 +4,7 @@ public class Exercice {
 
     private Integer id;
     private String title;
-    private String statement;
+    private String content;
 
     public Integer getId() {
         return id;
@@ -22,11 +22,11 @@ public class Exercice {
         this.title = title;
     }
 
-    public String getStatement() {
-        return statement;
+    public String getContent() {
+        return content;
     }
 
-    public void setStatement(String statement) {
-        this.statement = statement;
+    public void setContent(String content) {
+        this.content = content;
     }
 }
