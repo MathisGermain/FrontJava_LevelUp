@@ -1,10 +1,13 @@
 package com.esgi.al2.application.java.levelUp.model;
 
+import java.util.List;
+
 public class Exercice {
 
     private Integer id;
     private String title;
     private String content;
+    private List<String> test;
 
     public Integer getId() {
         return id;
@@ -28,5 +31,13 @@ public class Exercice {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public List<String> getTest() {
+        return test;
+    }
+
+    public void setTest(List<String> test) {
+        this.test = test;
     }
 }
