@@ -6,6 +6,7 @@ public class ExerciceForm {
     private String statement;
     private String title;
     private String code;
+    private String langage;
 
 
     public Integer getExerciceId() {
@@ -38,5 +39,13 @@ public class ExerciceForm {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getLangage() {
+        return langage;
+    }
+
+    public void setLangage(String langage) {
+        this.langage = langage;
     }
 }

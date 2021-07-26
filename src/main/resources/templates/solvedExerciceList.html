@@ -25,7 +25,11 @@
                         <td th:text="${solvedExercice.id}" />
                         <td th:text="${solvedExercice.title}" />
                         <td th:text="${solvedExercice.content}" />
-                        <td><button class="blue_button">Voir</button></td>
+                        <td>
+                            <a th:href="@{'/solvedExercice?id=' + ${solvedExercice.id}}">
+                                <button type="submit" class="blue_button">Voir</button>
+                            </a>
+                        </td>
                     </tr>
                 </tbody>
             </table>

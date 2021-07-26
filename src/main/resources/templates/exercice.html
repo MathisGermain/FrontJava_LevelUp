@@ -20,6 +20,13 @@
             <b>Ennoncé : </b><br>
             <i th:text="${exerciceForm.statement}"></i><br><br>
 
+            <select th:field="*{langage}">
+                <option th:value="python" th:text="Python"></option>
+                <option th:value="c" th:text="C"></option>
+                <option th:value="cpp" th:text="Cpp"></option>
+                <option th:value="java" th:text="Java"></option>
+            </select>
+
             <b>Réponse : </b>
             <textarea id="code-mirror" cols="300" rows="20" th:field="*{code}"></textarea>
 
