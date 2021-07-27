@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div class="topnav" th:fragment="header">
+        <a class="active" th:href="@{'/index'}">Menu</a>
+        <a th:href="@{'/exerciceList'}">Exercices</a>
+        <a th:href="@{'/userResponsesList?id=1'}">Mes dernières réponses</a>
+        <a th:href="@{'/solvedExerciceList'}">Exercices résolus</a>
+    </div>
+</body>
+</html>

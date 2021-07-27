@@ -5,6 +5,7 @@
         <title>Title</title>
         <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
         <link rel="stylesheet" type="text/css" th:href="@{/css/exercice.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/header.css}"/>
 
         <!-- Create a simple CodeMirror instance -->
         <link rel="stylesheet" th:href="@{/codemirror/lib/codemirror.css}">
@@ -12,6 +13,7 @@
         <script th:src="@{/codemirror/mode/javascript/javascript.js}"></script>
     </head>
     <body>
+    <div th:insert="~{header :: header}"></div>
         <form th:action="@{/exercice}" th:object="${exerciceForm}" method="POST">
             <input type="hidden" th:field="*{exerciceId}">
 

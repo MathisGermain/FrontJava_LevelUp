@@ -4,20 +4,20 @@
         <meta charset="UTF-8">
         <title>Title</title>
         <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/exercice.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/header.css}"/>
     </head>
     <body>
+    <div th:insert="~{header :: header}"></div>
+    <form th:action="@{/solvedExercice}" th:object="${responseForm}" method="POST">
         <div>
             <Label>Ennoncé : </Label>
             <p th:text="${responseForm.title}"></p>
-
             <label>Code : </label>
             <p th:text="${responseForm.code}"></p>
         </div>
-
-        <form th:action="@{/solvedExercice}" th:object="${responseForm}" method="POST">
-            <input type="text" placeholder="Title">
-            <textarea cols="300" rows="20">Give your opinion on this code</textarea>
-            <button type="submit" >Login</button>
+            <textarea cols="100" rows="20">Give your opinion on this code</textarea>
+            <button type="submit" >Envoyer</button>
         </form>
     </body>
 </html>

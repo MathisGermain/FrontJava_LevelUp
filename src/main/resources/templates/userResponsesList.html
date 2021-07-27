@@ -5,9 +5,11 @@
     <title>Title</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/exerciceList.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/header.css}"/>
 </head>
 
 <body>
+<div th:insert="~{header :: header}"></div>
 <h2>User Responses List</h2>
 
 <div class="table-wrapper">
