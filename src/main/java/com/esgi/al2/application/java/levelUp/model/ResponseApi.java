@@ -2,16 +2,26 @@ package com.esgi.al2.application.java.levelUp.model;
 
 import java.time.LocalDateTime;
 
-public class Response {
+public class ResponseApi {
+
+    private String id;
 
     private String userid;
+
     private String exerciseid;
+
     private String codeSent;
 
-    public Response(String userid, String exerciseid, String codeSent) {
-        this.userid = userid;
-        this.exerciseid = exerciseid;
-        this.codeSent = codeSent;
+    private String status;
+
+    private String date;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUserid() {
@@ -36,5 +46,21 @@ public class Response {
 
     public void setCodeSent(String codeSent) {
         this.codeSent = codeSent;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

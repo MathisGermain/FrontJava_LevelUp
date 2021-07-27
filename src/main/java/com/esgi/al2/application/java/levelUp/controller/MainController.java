@@ -3,8 +3,10 @@ package com.esgi.al2.application.java.levelUp.controller;
 import com.esgi.al2.application.java.levelUp.form.ElementList;
 import com.esgi.al2.application.java.levelUp.form.ExerciceForm;
 import com.esgi.al2.application.java.levelUp.form.LoginForm;
+import com.esgi.al2.application.java.levelUp.form.ResponseForm;
 import com.esgi.al2.application.java.levelUp.model.Exercice;
 import com.esgi.al2.application.java.levelUp.model.Response;
+import com.esgi.al2.application.java.levelUp.model.ResponseApi;
 import com.esgi.al2.application.java.levelUp.model.User;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -165,6 +167,7 @@ public class MainController {
                 User user = (User) session.getAttribute("user");
                 Response response = new Response(user.getId().toString(),exerciceForm.getExerciceId().toString(),exerciceForm.getCode());
                 System.out.println("Langage : " + exerciceForm.getLangage());
+                System.out.println("Vérification send Exercice , user id : " + response.getUserid() + " exercice_id : " + response.getExerciseid() + " code_sent : " + response.getCodeSent());
                 ObjectMapper mapper = new ObjectMapper();
                 String json = mapper.writeValueAsString(response);
                 String responseHttp = doPostWithAccessToken(apiLevelUpUrl + "responses/send-" + exerciceForm.getLangage(),json,session.getAttribute("accessToken").toString());
@@ -182,27 +185,49 @@ public class MainController {
     }
 
     @RequestMapping(value = { "/usersResponsesList" }, params = { "id" } , method = RequestMethod.GET)
-    public String showUsersResponsesList(Model model, @RequestParam("id") Integer id){
+    public String showUsersResponsesList(Model model, HttpSession session ,@RequestParam("id") Integer id){
 
         ExerciceForm exerciceForm = new ExerciceForm();
-
+        List<ResponseApi> responses;
         try {
-            HttpClient client = getHttpClient();
-            HttpRequest request = getHttpRequest(apiLevelUpUrl + "usersResponsesList/" + id);
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
+            HttpResponse<String> response = doGetWithAccessToken(apiLevelUpUrl + "responses/exercise/" + id, session.getAttribute("accessToken").toString());
             ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            responses = Arrays.asList(mapper.readValue(response.body(), ResponseApi[].class));
+        }catch (Exception e){
+            return "error";
+        }
+        model.addAttribute("responsesList",responses);
+        model.addAttribute("exerciceForm", exerciceForm);
+
+        return "userResponsesList";
+    }
+
+    @RequestMapping(value = { "/solvedExercice" }, params = { "id" } , method = RequestMethod.GET)
+    public String showCommentPage(Model model, HttpSession session , @RequestParam("id") Integer id){
+
+        ResponseForm responseForm = new ResponseForm();
+        try {
+            HttpResponse<String> response = doGetWithAccessToken(apiLevelUpUrl + "responses/" + id , session.getAttribute("accessToken").toString());
+            ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            ResponseApi responseApi = mapper.readValue(response.body(), ResponseApi.class);
+            responseForm.setId(responseApi.getId());
+            responseForm.setExerciceId(responseApi.getExerciseid());
+            responseForm.setCode(responseApi.getCodeSent());
+            responseForm.setUserId(responseApi.getUserid());
+
+            response = doGetWithAccessToken(apiLevelUpUrl + "exercises/" + responseApi.getExerciseid() , session.getAttribute("accessToken").toString());
+            mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             Exercice exercice = mapper.readValue(response.body(), Exercice.class);
-            exerciceForm.setExerciceId(id);
-            exerciceForm.setTitle(exercice.getTitle());
-            exerciceForm.setStatement(exercice.getContent());
+
+            responseForm.setTitle(exercice.getTitle());
+            responseForm.setStatement(exercice.getContent());
+
         }catch (Exception e){
             return "error";
         }
 
-        model.addAttribute("exerciceForm", exerciceForm);
-
-        return "exercice";
+        model.addAttribute("responseForm", responseForm);
+        return "solvedExercise";
     }
 
     public HttpClient getHttpClient(){

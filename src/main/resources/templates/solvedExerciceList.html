@@ -26,7 +26,7 @@
                         <td th:text="${solvedExercice.title}" />
                         <td th:text="${solvedExercice.content}" />
                         <td>
-                            <a th:href="@{'/solvedExercice?id=' + ${solvedExercice.id}}">
+                            <a th:href="@{'/usersResponsesList?id=' + ${solvedExercice.id}}">
                                 <button type="submit" class="blue_button">Voir</button>
                             </a>
                         </td>

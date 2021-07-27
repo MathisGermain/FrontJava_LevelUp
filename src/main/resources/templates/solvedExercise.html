@@ -8,13 +8,13 @@
     <body>
         <div>
             <Label>Ennoncé : </Label>
-            <p></p>
+            <p th:text="${responseForm.title}"></p>
 
             <label>Code : </label>
-            <p></p>
+            <p th:text="${responseForm.code}"></p>
         </div>
 
-        <form th:action="@{/solvedExercice}" th:object="${commentForm}" method="POST">
+        <form th:action="@{/solvedExercice}" th:object="${responseForm}" method="POST">
             <input type="text" placeholder="Title">
             <textarea cols="300" rows="20">Give your opinion on this code</textarea>
             <button type="submit" >Login</button>
