@@ -14,6 +14,8 @@ public class ResponseApi {
 
     private String status;
 
+    private String resultconsole;
+
     private String date;
 
     public String getId() {
@@ -46,6 +48,14 @@ public class ResponseApi {
 
     public void setCodeSent(String codeSent) {
         this.codeSent = codeSent;
+    }
+
+    public String getResultconsole() {
+        return codeSent;
+    }
+
+    public void setResultconsole(String resultconsole) {
+        this.codeSent = resultconsole;
     }
 
     public String getStatus() {
