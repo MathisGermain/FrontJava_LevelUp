@@ -10,13 +10,14 @@
     <body>
     <div th:insert="~{header :: header}"></div>
     <form th:action="@{/solvedExercice}" th:object="${responseForm}" method="POST">
+        <input type="hidden" th:field="*{id}" th:value="${responseForm.id}">
         <div>
             <Label>Ennoncé : </Label>
             <p th:text="${responseForm.title}"></p>
             <label>Code : </label>
             <p th:text="${responseForm.code}"></p>
         </div>
-            <textarea cols="100" rows="20">Give your opinion on this code</textarea>
+            <textarea cols="100" rows="20" th:field="*{comment}">Give your opinion on this code</textarea>
             <button type="submit" >Envoyer</button>
         </form>
     </body>

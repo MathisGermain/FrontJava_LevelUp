@@ -48,194 +48,34 @@ public class MainController {
     @Value("${error.login.invalid}")
     private String errorLoginInvalid;
 
-    @Value("${error.empty.code.input}")
-    private String errorCodeEmpty;
-
     @Value("${api.levelUp.url}")
     private String apiLevelUpUrl;
 
-
-
+    @Value("${error.not.sign.in}")
+    private String errorNotSignIn;
 
 
     @RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)
-    public String index(Model model) {
+    public String index(Model model,HttpSession session) throws Exception {
+
+        if(!AuthController.checkSignIn(session)){
+            LoginForm loginForm = new LoginForm();
+            model.addAttribute("loginForm", loginForm);
+            model.addAttribute("error",errorNotSignIn);
+            return "login";
+        }
 
         model.addAttribute("message", message);
 
         return "index";
     }
 
-    @RequestMapping(value = { "/login" }, method = RequestMethod.GET)
-    public String showLoginPage(Model model) throws Exception {
-
-        LoginForm loginForm = new LoginForm();
-        model.addAttribute("loginForm", loginForm);
-
-        return "login";
-    }
-
-    @RequestMapping(value = { "/login" }, method = RequestMethod.POST)
-    public String postLogin(Model model, HttpServletRequest request,//
-    @ModelAttribute("loginForm") LoginForm loginForm) throws Exception {
-
-        String email = loginForm.getEmail();
-        String password = loginForm.getPassword();
-
-        if (email != null && email.length() > 0 //
-                && password != null && password.length() > 0) {
-            try{
-                User user = sendLogin(loginForm);
-                String accessToken = generateAccessToken(loginForm,user.getId());
-                HttpSession session = request.getSession();
-                session.setAttribute("user", user);
-                session.setAttribute("accessToken" , accessToken);
-                return "redirect:/index";
-            }catch (Exception e){
-                model.addAttribute("errorLoginInvalid", errorLoginInvalid);
-                return "login";
-            }
-        }else{
-            model.addAttribute("errorLoginEmpty", errorLoginEmpty);
-            return "login";
-        }
-    }
-
-    @RequestMapping(value = { "/exerciceList" }, method = RequestMethod.GET)
-    public String showExerciceListPage(Model model, HttpServletRequest request,HttpSession session){
-
-        List<Exercice> exercices;
-        User sameObject = (User) session.getAttribute("user");
-        ExerciceForm exerciceForm = new ExerciceForm();
-        try{
-            HttpResponse<String> response = doGetWithAccessToken(apiLevelUpUrl + "exercises/all",session.getAttribute("accessToken").toString());
-            ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            exercices = Arrays.asList(mapper.readValue(response.body(), Exercice[].class));
-        }catch (Exception e){
-            return "error";
-        }
-        model.addAttribute("exercices", exercices);
-        model.addAttribute("exerciceForm",exerciceForm);
-
-        return "exerciceList";
-    }
-
-    @RequestMapping(value = { "/solvedExerciceList" }, method = RequestMethod.GET)
-    public String showSolvedExerciceListPage(Model model, HttpServletRequest request,HttpSession session){
-
-        List<Exercice> exercices;
-        User sameObject = (User) session.getAttribute("user");
-        ExerciceForm exerciceForm = new ExerciceForm();
-        try{
-            HttpResponse<String> response = doGetWithAccessToken(apiLevelUpUrl + "exercises/all",session.getAttribute("accessToken").toString());
-            ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            exercices = Arrays.asList(mapper.readValue(response.body(), Exercice[].class));
-        }catch (Exception e){
-            return "error";
-        }
-        model.addAttribute("solvedExercices", exercices);
-
-        return "solvedExerciceList";
-    }
-
-    @RequestMapping(value = { "/exercice" }, params = { "id" } , method = RequestMethod.GET)
-    public String showExercicePage(Model model, HttpSession session , @RequestParam("id") Integer id){
-
-        ExerciceForm exerciceForm = new ExerciceForm();
-        try {
-            HttpResponse<String> response = doGetWithAccessToken(apiLevelUpUrl + "exercises/" + id , session.getAttribute("accessToken").toString());
-            ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            Exercice exercice = mapper.readValue(response.body(), Exercice.class);
-            exerciceForm.setExerciceId(id);
-            exerciceForm.setTitle(exercice.getTitle());
-            exerciceForm.setStatement(exercice.getContent());
-        }catch (Exception e){
-            return "error";
-        }
-
-        model.addAttribute("exerciceForm", exerciceForm);
-        return "exercice";
-    }
-
-    @RequestMapping(value = { "/exercice" }, method = RequestMethod.POST)
-    public String postExercice(Model model, HttpSession session ,
-                            @ModelAttribute("exerciceForm") ExerciceForm exerciceForm) throws Exception {
-
-
-        if (exerciceForm.getCode() != null && exerciceForm.getCode().length() > 0) {
-            try {
-                User user = (User) session.getAttribute("user");
-                Response response = new Response(user.getId().toString(),exerciceForm.getExerciceId().toString(),exerciceForm.getCode());
-                System.out.println("Langage : " + exerciceForm.getLangage());
-                System.out.println("Vérification send Exercice , user id : " + response.getUserid() + " exercice_id : " + response.getExerciseid() + " code_sent : " + response.getCodeSent());
-                ObjectMapper mapper = new ObjectMapper();
-                String json = mapper.writeValueAsString(response);
-                String responseHttp = doPostWithAccessToken(apiLevelUpUrl + "responses/send-" + exerciceForm.getLangage(),json,session.getAttribute("accessToken").toString());
-
-                model.addAttribute("status", responseHttp);
-                return "redirect:/exercice?id="+exerciceForm.getExerciceId();
-
-            }catch (Exception e){
-                return "error";
-            }
-        }else{
-            model.addAttribute("errorCodeEmpty", errorCodeEmpty);
-            return "redirect:/exercice?id="+exerciceForm.getExerciceId();
-        }
-    }
-
-    @RequestMapping(value = { "/usersResponsesList" }, params = { "id" } , method = RequestMethod.GET)
-    public String showUsersResponsesList(Model model, HttpSession session ,@RequestParam("id") Integer id){
-
-        ExerciceForm exerciceForm = new ExerciceForm();
-        List<ResponseApi> responses;
-        try {
-            HttpResponse<String> response = doGetWithAccessToken(apiLevelUpUrl + "responses/exercise/" + id, session.getAttribute("accessToken").toString());
-            ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            responses = Arrays.asList(mapper.readValue(response.body(), ResponseApi[].class));
-        }catch (Exception e){
-            return "error";
-        }
-        model.addAttribute("responsesList",responses);
-        model.addAttribute("exerciceForm", exerciceForm);
-
-        return "userResponsesList";
-    }
-
-    @RequestMapping(value = { "/solvedExercice" }, params = { "id" } , method = RequestMethod.GET)
-    public String showCommentPage(Model model, HttpSession session , @RequestParam("id") Integer id){
-
-        ResponseForm responseForm = new ResponseForm();
-        try {
-            HttpResponse<String> response = doGetWithAccessToken(apiLevelUpUrl + "responses/" + id , session.getAttribute("accessToken").toString());
-            ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            ResponseApi responseApi = mapper.readValue(response.body(), ResponseApi.class);
-            responseForm.setId(responseApi.getId());
-            responseForm.setExerciceId(responseApi.getExerciseid());
-            responseForm.setCode(responseApi.getCodeSent());
-            responseForm.setUserId(responseApi.getUserid());
-
-            response = doGetWithAccessToken(apiLevelUpUrl + "exercises/" + responseApi.getExerciseid() , session.getAttribute("accessToken").toString());
-            mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            Exercice exercice = mapper.readValue(response.body(), Exercice.class);
-
-            responseForm.setTitle(exercice.getTitle());
-            responseForm.setStatement(exercice.getContent());
-
-        }catch (Exception e){
-            return "error";
-        }
-
-        model.addAttribute("responseForm", responseForm);
-        return "solvedExercise";
-    }
-
-    public HttpClient getHttpClient(){
+    public static HttpClient getHttpClient(){
         HttpClient client = HttpClient.newHttpClient();
         return client;
     }
 
-    public HttpRequest getHttpRequest(String uri) throws Exception {
+    public static HttpRequest getHttpRequest(String uri) throws Exception {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uri))
@@ -244,7 +84,7 @@ public class MainController {
         return request;
     }
 
-    public HttpRequest getHttpRequestWithAccessToken(String uri, String token) throws Exception {
+    public static HttpRequest getHttpRequestWithAccessToken(String uri, String token) throws Exception {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uri))
@@ -253,39 +93,15 @@ public class MainController {
         return request;
     }
 
-    public User sendLogin(LoginForm loginForm) throws Exception{
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(loginForm);
 
-        String responseUser = doPost(apiLevelUpUrl + "users/signin",json);
-        ObjectMapper mapperResult = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        User user = mapperResult.readValue(responseUser, User.class);
-
-        String response = doPost(apiLevelUpUrl + "auth/login",json);
-
-        return user;
-    }
-
-    public String generateAccessToken(LoginForm loginForm , Integer userId) throws Exception{
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(loginForm);
-        System.out.println("ResultingJSONstring = " + json);
-        String response = doPost(apiLevelUpUrl + "auth/login",json);
-        HttpResponse<String> accessToken = doGet(apiLevelUpUrl + "auth/token/" + userId);
-
-        System.out.println("AccessToken : " + accessToken.body());
-
-        return accessToken.body();
-    }
-
-    public  HttpResponse<String> doGet(String url) throws Exception{
+    public static HttpResponse<String> doGet(String url) throws Exception{
         HttpClient client = getHttpClient();
         HttpRequest request = getHttpRequest(url);
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         return response;
     }
 
-    public  HttpResponse<String> doGetWithAccessToken(String url, String token) throws Exception{
+    public static HttpResponse<String> doGetWithAccessToken(String url, String token) throws Exception{
         HttpClient client = getHttpClient();
         HttpRequest request = getHttpRequestWithAccessToken(url,token);
         System.out.println("Requete http post + token : " + request);
@@ -293,7 +109,7 @@ public class MainController {
         return response;
     }
 
-    public String doPostWithAccessToken(String urlPath, String json, String token) throws Exception{
+    public static String doPostWithAccessToken(String urlPath, String json, String token) throws Exception{
         URL url = new URL(urlPath);
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("POST");
@@ -320,7 +136,7 @@ public class MainController {
 
     }
 
-    public String doPost(String urlPath, String json) throws Exception{
+    public static String doPost(String urlPath, String json) throws Exception{
         URL url = new URL(urlPath);
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("POST");
