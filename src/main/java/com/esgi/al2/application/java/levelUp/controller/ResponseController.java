@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -118,6 +119,38 @@ public class ResponseController {
         }
         return "redirect:/solvedExercice?id="+responseForm.getId();
     }
+
+    @RequestMapping(value = { "/solvedExerciceUser" } , method = RequestMethod.GET)
+    public String showSolvedExercisePage(Model model, HttpSession session){
+
+        List<Exercice> exercices = new ArrayList<Exercice>();
+        List<ResponseApi> responses;
+        ResponseForm responseForm = new ResponseForm();
+        try {
+            User user = (User) session.getAttribute("user");
+            System.out.println("User id : " + user.getId());
+            HttpResponse<String> response = MainController.doGetWithAccessToken(apiLevelUpUrl + "responses/user/" + user.getId() , session.getAttribute("accessToken").toString());
+            ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            responses = Arrays.asList(mapper.readValue(response.body(), ResponseApi[].class));
+            System.out.println("Réponses : " + response.body().toString());
+            for (ResponseApi resp : responses) {
+                HttpResponse<String> responseExercise = MainController.doGetWithAccessToken(apiLevelUpUrl + "exercises/" + resp.getExerciseid() , session.getAttribute("accessToken").toString());
+                Exercice exercice = mapper.readValue(responseExercise.body(), Exercice.class);
+                System.out.println("Exo : " + exercice.getTitle());
+                exercices.add(exercice);
+                System.out.println("Add Exercise");
+            }
+            System.out.println("Exe : " + exercices.get(0).getTitle());
+            model.addAttribute("exercices", exercices);
+
+        }catch (Exception e){
+            return "error";
+        }
+
+        return "exerciceList";
+    }
+
+
 
 
 }

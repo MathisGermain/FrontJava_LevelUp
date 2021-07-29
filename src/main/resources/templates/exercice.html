@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
-        <title>Title</title>
+        <title>Exercice</title>
         <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
         <link rel="stylesheet" type="text/css" th:href="@{/css/exercice.css}"/>
         <link rel="stylesheet" type="text/css" th:href="@{/css/header.css}"/>
@@ -30,10 +30,14 @@
             </select>
 
             <b>Réponse : </b>
-            <textarea id="code-mirror" cols="300" rows="20" th:field="*{code}"></textarea>
+            <textarea id="code-mirror" cols="300" rows="20" th:field="*{code}" th:text="${exerciceForm.code}"></textarea>
 
             <div class="button-group">
                 <button type="submit" class="green-button" >Valider</button>
+            </div>
+
+            <div th:if="${status}" th:utext="${status}"
+                 style="color:red;font-style:italic;">
             </div>
         </form>
 

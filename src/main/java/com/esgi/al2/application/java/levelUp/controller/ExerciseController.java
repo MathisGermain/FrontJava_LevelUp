@@ -3,6 +3,7 @@ package com.esgi.al2.application.java.levelUp.controller;
 import com.esgi.al2.application.java.levelUp.form.ExerciceForm;
 import com.esgi.al2.application.java.levelUp.model.Exercice;
 import com.esgi.al2.application.java.levelUp.model.Response;
+import com.esgi.al2.application.java.levelUp.model.ResponseApi;
 import com.esgi.al2.application.java.levelUp.model.User;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,7 +34,6 @@ public class ExerciseController {
     public String showExerciceListPage(Model model, HttpServletRequest request, HttpSession session){
 
         List<Exercice> exercices;
-        User sameObject = (User) session.getAttribute("user");
         ExerciceForm exerciceForm = new ExerciceForm();
         try{
             HttpResponse<String> response = MainController.doGetWithAccessToken(apiLevelUpUrl + "exercises/all",session.getAttribute("accessToken").toString());
@@ -53,6 +53,8 @@ public class ExerciseController {
     public String showExercicePage(Model model, HttpSession session , @RequestParam("id") Integer id){
 
         ExerciceForm exerciceForm = new ExerciceForm();
+
+        User user = (User) session.getAttribute("user");
         try {
             HttpResponse<String> response = MainController.doGetWithAccessToken(apiLevelUpUrl + "exercises/" + id , session.getAttribute("accessToken").toString());
             ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -60,6 +62,13 @@ public class ExerciseController {
             exerciceForm.setExerciceId(id);
             exerciceForm.setTitle(exercice.getTitle());
             exerciceForm.setStatement(exercice.getContent());
+
+            response = MainController.doGetWithAccessToken(apiLevelUpUrl + "responses/?user_id="+user.getId()+"&exercise_id=" + id , session.getAttribute("accessToken").toString());
+            ResponseApi resp = mapper.readValue(response.body(), ResponseApi.class);
+            if(resp != null){
+                exerciceForm.setCode(resp.getCodeSent());
+                model.addAttribute("status",resp.getStatus());
+            }
         }catch (Exception e){
             return "error";
         }
