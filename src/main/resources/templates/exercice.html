@@ -40,7 +40,7 @@
                  style="color:red;font-style:italic;">
             </div>
 
-            <div th:if="${comments}" th:each="comment: ${comments}">
+            <div th:if="${comments}" th:each="comment: ${comments}" style="display: flex; flex-direction: row; justify-content: space-around; border: 2px solid">
                 <p th:text="${comment.content}"></p>
                 <p th:text="${comment.date}"></p>
             </div>
