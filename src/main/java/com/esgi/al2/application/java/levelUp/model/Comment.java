@@ -8,11 +8,7 @@ public class Comment {
 
     private String content;
 
-    public Comment(String responseid, String userid, String content) {
-        this.responseid = responseid;
-        this.userid = userid;
-        this.content = content;
-    }
+    private String date;
 
     public String getResponseid() {
         return responseid;
@@ -36,5 +32,13 @@ public class Comment {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

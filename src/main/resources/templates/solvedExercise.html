@@ -19,6 +19,10 @@
         </div>
             <textarea cols="100" rows="20" th:field="*{comment}">Give your opinion on this code</textarea>
             <button type="submit" >Envoyer</button>
+
+        <div th:if="${status}" th:utext="${status}"
+             style="color:red;font-style:italic;">
+        </div>
         </form>
     </body>
 </html>

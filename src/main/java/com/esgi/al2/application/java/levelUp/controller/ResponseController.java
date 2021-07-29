@@ -26,6 +26,9 @@ public class ResponseController {
     @Value("${api.levelUp.url}")
     private String apiLevelUpUrl;
 
+    @Value("${add.comment.success}")
+    private String commentSuccess;
+
     @RequestMapping(value = { "/solvedExerciceList" }, method = RequestMethod.GET)
     public String showSolvedExerciceListPage(Model model, HttpServletRequest request, HttpSession session){
 
@@ -100,16 +103,15 @@ public class ResponseController {
                 User user = (User) session.getAttribute("user");
                 System.out.println("Ok");
                 System.out.println("UserId : "+ user.getId().toString());
-                Comment comment = new Comment(
-                        responseForm.getId(),
-                        user.getId().toString(),
-                        responseForm.getComment()
-                );
+                Comment comment = new Comment();
+                comment.setResponseid(responseForm.getId());
+                comment.setUserid(user.getId().toString());
+                comment.setContent(responseForm.getComment());
                 ObjectMapper mapper = new ObjectMapper();
                 String json = mapper.writeValueAsString(comment);
                 String responseHttp = MainController.doPostWithAccessToken(apiLevelUpUrl + "comment/add",json,session.getAttribute("accessToken").toString());
-
-                model.addAttribute("status", responseHttp);
+                System.out.println(commentSuccess);
+                model.addAttribute("status", commentSuccess);
 
             }catch (Exception e){
                 return "error";

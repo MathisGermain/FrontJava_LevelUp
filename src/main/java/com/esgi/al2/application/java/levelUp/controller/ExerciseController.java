@@ -1,10 +1,7 @@
 package com.esgi.al2.application.java.levelUp.controller;
 
 import com.esgi.al2.application.java.levelUp.form.ExerciceForm;
-import com.esgi.al2.application.java.levelUp.model.Exercice;
-import com.esgi.al2.application.java.levelUp.model.Response;
-import com.esgi.al2.application.java.levelUp.model.ResponseApi;
-import com.esgi.al2.application.java.levelUp.model.User;
+import com.esgi.al2.application.java.levelUp.model.*;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,8 +63,17 @@ public class ExerciseController {
             response = MainController.doGetWithAccessToken(apiLevelUpUrl + "responses/?user_id="+user.getId()+"&exercise_id=" + id , session.getAttribute("accessToken").toString());
             ResponseApi resp = mapper.readValue(response.body(), ResponseApi.class);
             if(resp != null){
+
                 exerciceForm.setCode(resp.getCodeSent());
                 model.addAttribute("status",resp.getStatus());
+
+                List<Comment> comments;
+                response = MainController.doGetWithAccessToken(apiLevelUpUrl + "comment/response/"+resp.getId() , session.getAttribute("accessToken").toString());
+                System.out.println("Response test : " + response);
+                comments = Arrays.asList(mapper.readValue(response.body(), Comment[].class));
+                System.out.println("comment test : " + comments.toString()) ;
+
+                model.addAttribute("comments",comments);
             }
         }catch (Exception e){
             return "error";
